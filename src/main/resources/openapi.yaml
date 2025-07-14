@@ -19,8 +19,12 @@ paths:
             schema:
               $ref: '#/components/schemas/AlumnoRequest'
       responses:
-        '204':
-          description: Alumno grabado correctamente (sin contenido)
+        '200':
+          description: Alumno grabado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OkResponse'
         '400':
           description: Error de validación o id repetido
           content:
@@ -111,3 +115,9 @@ components:
         mensaje:
           type: string
           example: "El ID ya existe, no se pudo grabar el alumno"
+    OkResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: "Se creó el alumno"

@@ -2,6 +2,7 @@ package com.digitalfactory.alumnoservice.controller;
 
 import com.digitalfactory.alumnoservice.model.Alumno;
 import com.digitalfactory.alumnoservice.model.AlumnoRequest;
+import com.digitalfactory.alumnoservice.model.OkResponse;
 import com.digitalfactory.alumnoservice.service.AlumnoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,12 +39,12 @@ class DefaultApiImplTest {
 
         when(alumnoService.crearAlumnoDesdeRequest(any(AlumnoRequest.class))).thenReturn(Mono.empty());
 
-        Mono<ResponseEntity<Void>> responseMono = defaultApi.crearAlumno(Mono.just(request), null);
+        Mono<ResponseEntity<OkResponse>> responseMono = defaultApi.crearAlumno(Mono.just(request), null);
 
         StepVerifier.create(responseMono)
                 .assertNext(response -> {
                     assertTrue(response.getStatusCode().is2xxSuccessful());
-                    assertEquals(204, response.getStatusCodeValue());
+                    assertEquals(200, response.getStatusCodeValue());
                 })
                 .verifyComplete();
 
