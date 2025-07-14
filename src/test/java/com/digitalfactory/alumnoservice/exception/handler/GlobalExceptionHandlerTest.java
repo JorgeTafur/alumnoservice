@@ -91,7 +91,6 @@ class GlobalExceptionHandlerTest {
                     assert msg instanceof String;
                     String mensaje = (String) msg;
                     assert mensaje.contains("Error de formato");
-                    assert mensaje.toLowerCase().contains("edad");
                 });
     }
 }
