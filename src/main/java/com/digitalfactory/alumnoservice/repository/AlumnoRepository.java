@@ -16,9 +16,9 @@ public class AlumnoRepository {
         return Mono.just(baseMemoria.containsKey(id));
     }
 
-    public Mono<Void> guardar(Alumno alumno) {
+    public Mono<Alumno> guardar(Alumno alumno) {
         baseMemoria.put(alumno.getId(), alumno);
-        return Mono.empty();
+        return Mono.just(alumno);
     }
 
     public Flux<Alumno> obtenerTodos() {

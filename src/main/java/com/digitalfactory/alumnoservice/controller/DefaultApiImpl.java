@@ -24,7 +24,7 @@ public class DefaultApiImpl implements DefaultApi {
     public Mono<ResponseEntity<OkResponse>> crearAlumno(Mono<AlumnoRequest> alumnoRequestMono, ServerWebExchange exchange) {
         return alumnoRequestMono
                 .flatMap(alumnoService::crearAlumnoDesdeRequest)
-                .thenReturn(ResponseEntity.ok(new OkResponse().mensaje("ok")));
+                .map(alumno -> ResponseEntity.ok(new OkResponse().mensaje(alumno.toString())));
     }
 
     @Override

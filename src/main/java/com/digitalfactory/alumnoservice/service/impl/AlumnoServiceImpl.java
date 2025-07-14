@@ -25,7 +25,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     private static final Logger log = LoggerFactory.getLogger(AlumnoServiceImpl.class);
 
     @Override
-    public Mono<Void> crearAlumnoDesdeRequest(AlumnoRequest request) {
+    public Mono<Alumno> crearAlumnoDesdeRequest(AlumnoRequest request) {
         log.info("Inicio crearAlumnoDesdeRequest: {}", request);
         Alumno alumno = AlumnoFactory.crearDesdeRequest(request);
         return crearAlumno(alumno)
@@ -34,7 +34,7 @@ public class AlumnoServiceImpl implements AlumnoService {
     }
 
     @Override
-    public Mono<Void> crearAlumno(Alumno alumno) {
+    public Mono<Alumno> crearAlumno(Alumno alumno) {
         log.info("Inicio crearAlumno: {}", alumno);
         return ejecutarValidaciones(alumno)
                 .doOnSuccess(v -> log.info("Validaciones pasadas para alumno: {}", alumno))
