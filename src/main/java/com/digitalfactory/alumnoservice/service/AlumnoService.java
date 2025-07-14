@@ -8,5 +8,6 @@ import reactor.core.publisher.Mono;
 public interface AlumnoService {
     Mono<Void> crearAlumnoDesdeRequest(AlumnoRequest alumnoRequest);
     Mono<Void> crearAlumno(Alumno alumno);
+    Mono<Void> actualizarAlumnoDesdeRequest(AlumnoRequest alumno);
     Flux<Alumno> obtenerAlumnosActivos();
 }

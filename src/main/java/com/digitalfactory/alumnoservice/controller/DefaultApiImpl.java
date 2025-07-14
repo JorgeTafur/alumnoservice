@@ -25,6 +25,13 @@ public class DefaultApiImpl implements DefaultApi {
     }
 
     @Override
+    public Mono<ResponseEntity<Void>> actualizarAlumno(Mono<AlumnoRequest> alumnoRequestMono, ServerWebExchange exchange) {
+        return alumnoRequestMono
+                .flatMap(alumnoService::actualizarAlumnoDesdeRequest)
+                .thenReturn(ResponseEntity.noContent().build());
+    }
+
+    @Override
     public Mono<ResponseEntity<Flux<Alumno>>> listarAlumnosActivos(ServerWebExchange exchange) {
         return Mono.just(ResponseEntity.ok(alumnoService.obtenerAlumnosActivos()));
     }

@@ -27,6 +27,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    put:
+      summary: Actualizar un alumno
+      operationId: actualizarAlumno
+      requestBody:
+        description: Alumno a grabar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnoRequest'
+      responses:
+        '204':
+          description: Alumno grabado correctamente (sin contenido)
+        '400':
+          description: Error de validación o id repetido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /alumnos/activos:
     get:

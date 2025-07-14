@@ -47,6 +47,26 @@ public class AlumnoServiceImpl implements AlumnoService {
     }
 
     @Override
+    public Mono<Void> actualizarAlumnoDesdeRequest(AlumnoRequest alumno) {
+        log.info("Inicio actualizarAlumnoDesdeRequest: {}", alumno);
+        return alumnoRepository.buscaPorId(alumno.getId())
+                .switchIfEmpty(Mono.error(new RuntimeException("Alumno no encontrado")))
+                .flatMap(existingAlumno -> {
+                    existingAlumno.setApellido(alumno.getApellido());
+                    existingAlumno.setEdad(alumno.getEdad());
+                    existingAlumno.setEstado(alumno.getEstado());
+                    existingAlumno.setNombre(alumno.getNombre());
+
+                    return ejecutarValidaciones(existingAlumno)
+                            .then(Mono.defer(() -> {
+                                log.info("Actualizando alumno después de validaciones...");
+                                return alumnoRepository.actualizar(existingAlumno);
+                            }));
+                });
+
+    }
+
+    @Override
     public Flux<Alumno> obtenerAlumnosActivos() {
         return alumnoRepository.obtenerTodos()
                 .filter(alumno -> alumno.getEstado() == EstadoEnum.ACTIVO);

@@ -16,7 +16,17 @@ public class AlumnoRepository {
         return Mono.just(baseMemoria.containsKey(id));
     }
 
+    public Mono<Alumno> buscaPorId(Integer id) {
+        return Mono.justOrEmpty(baseMemoria.get(id));
+    }
+
+
     public Mono<Void> guardar(Alumno alumno) {
+        baseMemoria.put(alumno.getId(), alumno);
+        return Mono.empty();
+    }
+
+    public Mono<Void> actualizar(Alumno alumno) {
         baseMemoria.put(alumno.getId(), alumno);
         return Mono.empty();
     }
