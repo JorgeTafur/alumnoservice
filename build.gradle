@@ -1,0 +1,105 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.7'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'org.openapi.generator' version '6.6.0'
+	id 'jacoco'
+}
+
+group = 'com.digitalfactory'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(11)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'io.projectreactor:reactor-core'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.4'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$projectDir/src/main/resources/openapi.yaml".toString()
+	outputDir = "$buildDir/generated"
+	apiPackage = "com.digitalfactory.alumnoservice.api"
+	modelPackage = "com.digitalfactory.alumnoservice.model"
+	configOptions = [
+			reactive: "true",
+			interfaceOnly: "true",
+			useTags: "true"
+	]
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs += ["$buildDir/generated/src/main/java"]
+		}
+	}
+}
+
+compileJava.dependsOn tasks.named('openApiGenerate')
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.11"
+}
+
+jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+	classDirectories.setFrom(
+			files(classDirectories.files.collect {
+				fileTree(dir: it, exclude: [
+						'**/generated/**',
+						'**/model/**',
+						'**/api/**',
+						'com/digitalfactory/alumnoservice/AlumnoserviceApplication.class'
+				])
+			})
+	)
+}
+
+jacocoTestCoverageVerification {
+	dependsOn test
+	violationRules {
+		rule {
+			element = 'BUNDLE'
+			limit {
+				counter = 'INSTRUCTION'
+				value = 'COVEREDRATIO'
+				minimum = 0.00
+			}
+		}
+	}
+}
+check.dependsOn jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification

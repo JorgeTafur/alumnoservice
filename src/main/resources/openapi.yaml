@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: Alumno Service API
+  version: 1.0.0
+  description: API reactiva para gestión de alumnos
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /alumnos:
+    post:
+      summary: Grabar un alumno
+      operationId: crearAlumno
+      requestBody:
+        description: Alumno a grabar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumnoRequest'
+      responses:
+        '204':
+          description: Alumno grabado correctamente (sin contenido)
+        '400':
+          description: Error de validación o id repetido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /alumnos/activos:
+    get:
+      summary: Obtener todos los alumnos con estado activo
+      operationId: listarAlumnosActivos
+      responses:
+        '200':
+          description: Lista de alumnos activos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alumno'
+
+components:
+  schemas:
+    EstadoEnum:
+      type: string
+      enum:
+        - activo
+        - inactivo
+
+    Alumno:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 123
+        nombre:
+          type: string
+          pattern: '^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s-]+$'
+          example: "Juan"
+        apellido:
+          type: string
+          pattern: '^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s-]+$'
+          example: "Perez"
+        estado:
+          $ref: '#/components/schemas/EstadoEnum'
+        edad:
+          type: integer
+          minimum: 0
+          example: 25
+      required:
+        - id
+        - nombre
+        - apellido
+        - estado
+        - edad
+
+    AlumnoRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 123
+        nombre:
+          type: string
+          pattern: '^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s-]+$'
+          example: "Juan"
+        apellido:
+          type: string
+          pattern: '^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s-]+$'
+          example: "Perez"
+        estado:
+          $ref: '#/components/schemas/EstadoEnum'
+        edad:
+          type: integer
+          minimum: 0
+          example: 25
+      required:
+        - id
+        - nombre
+        - apellido
+        - estado
+        - edad
+    ErrorResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: "El ID ya existe, no se pudo grabar el alumno"
